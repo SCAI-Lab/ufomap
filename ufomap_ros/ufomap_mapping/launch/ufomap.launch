@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <arg default="0.2" name="ufomap_resolution"></arg>
+  <arg default="16" name="ufomap_depth_levels"></arg>
+  <arg default="1" name="ufomap_num_workers"></arg>
+  <arg default="true" name="ufomap_color"></arg>
+  <arg default="/lidar_pc" name="ufomap_cloud_in"></arg>
+  <arg default="15" name="ufomap_max_range"></arg>
+  <arg default="4" name="ufomap_insert_depth"></arg>
+  <arg default="true" name="ufomap_simple_raycast"></arg>
+  <arg default="map" name="ufomap_frame_id"></arg>
+  <arg default="vehicle" name="ufomap_robot_frame_id"></arg>
+  <arg default="0.6" name="ufomap_robot_radius"></arg>
+  <arg default="0.6" name="ufomap_robot_height"></arg>
+  <arg default="true" name="ufomap_clear_robot"></arg>
+
+  <node name="ufomap_mapping_server_node" output="log" pkg="ufomap_mapping" required="true" type="ufomap_mapping_server_node">
+    <remap from="cloud_in" to="$(arg ufomap_cloud_in)"></remap>
+    <param name="num_workers" value="$(arg ufomap_num_workers)"></param>
+    <param name="resolution" value="$(arg ufomap_resolution)"></param>
+    <param name="depth_levels" value="$(arg ufomap_depth_levels)"></param>
+    <param name="color_map" value="$(arg ufomap_color)"></param>
+    <param name="max_range" value="$(arg ufomap_max_range)"></param>
+    <param name="insert_depth" value="$(arg ufomap_insert_depth)"></param>
+    <param name="simple_ray_casting" value="$(arg ufomap_simple_raycast)"></param>
+    <param name="frame_id" value="$(arg ufomap_frame_id)"></param>
+    <param name="robot_frame_id" value="$(arg ufomap_robot_frame_id)"></param>
+    <param name="clear_robot" value="$(arg ufomap_clear_robot)"></param>
+    <param name="robot_height" value="$(arg ufomap_robot_height)"></param>
+    <param name="robot_radius" value="$(arg ufomap_robot_radius)"></param>
+  </node>
+  <node name="relay_pcl" output="log" pkg="topic_tools" required="true" type="throttle" args="messages /ufomap_mapping_server_node/pcl_map 5 /ufomap_pcl"/>
+  <node name="relay_free_pcl" output="log" pkg="topic_tools" required="true" type="throttle" args="messages /ufomap_mapping_server_node/free_pcl_map 5 /ufomap_free_pcl"/>
+</launch>
