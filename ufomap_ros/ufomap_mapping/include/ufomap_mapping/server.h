@@ -109,6 +109,8 @@ class Server
 
 	// Publishers
 	std::vector<ros::Publisher> map_pub_;
+	ros::Publisher cloud_pub_;
+	ros::Publisher free_cloud_pub_;
 	unsigned int map_queue_size_;
 	ros::Timer pub_timer_;
 	double pub_rate_;
@@ -135,6 +137,7 @@ class Server
 	//
 
 	// Map
+  double resolution_;
 	std::variant<std::monostate, ufo::map::OccupancyMap, ufo::map::OccupancyMapColor> map_;
 	std::string frame_id_;
 
